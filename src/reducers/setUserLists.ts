@@ -1,12 +1,12 @@
 import {Action} from '../types';
 
-const signInUserReducer = (state: object = {}, action: Action) => {
+const setUserLists = (state: object[] = [], action: Action) => {
     switch(action.type){
-        case 'SIGNED_IN_USER':
+        case 'SET_USER_LISTS':
             return action.payload;
         default:
             return state;
     }
 }
 
-export default signInUserReducer;
+export default setUserLists;

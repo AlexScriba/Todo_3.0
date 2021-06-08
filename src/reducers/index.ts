@@ -1,7 +1,9 @@
 import {combineReducers} from 'redux';
 
-import signInUserReducer from './signInUserReducer';
+import setUserData from './setUserData';
+import setUserLists from './setUserLists';
 
 export default combineReducers({
-    user: signInUserReducer,
+    user: setUserData,
+    lists: setUserLists,
 });

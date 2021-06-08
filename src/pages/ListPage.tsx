@@ -1,19 +1,32 @@
 import  { useEffect } from 'react';
 import {connect} from 'react-redux';
 
-import {attemptLogin} from '../actions';
+import {attemptLogin, createNewUser} from '../actions';
+import {UserObj} from '../types';
+import {State} from '../types';
 
 interface Props {
     attemptLogin: any
+    createNewUser: any
+    user: UserObj
 }
 
-const ListPage = (props: Props) => {
+const ListPage = ({user, attemptLogin, createNewUser}: Props) => {
     
     useEffect(() => {
-        props.attemptLogin('test@gmail.com', 'test1234');
-    }, [props]);
+        // attemptLogin('test@gmail.com', 'test1234')
+        // createNewUser('test1@gmail.com', 'test1234', 'Alexander');
+    }, [attemptLogin]);
 
-    return <div>List Page</div>
+    return (
+        <div>
+            <div>{user.name}</div>
+        </div>
+    )
+}
+    
+const mapStateToProps = (state: State) => {
+    return {user: state.user};
 }
 
-export default connect(null, {attemptLogin})(ListPage);
+export default connect(mapStateToProps, {attemptLogin, createNewUser})(ListPage);

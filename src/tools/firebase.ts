@@ -1,6 +1,7 @@
-import {DocumentData, getFirestore, doc, getDoc} from 'firebase/firestore';
+import {DocumentData, getFirestore, doc, getDoc, collection, query, where, getDocs, setDoc} from 'firebase/firestore';
 import {initializeApp} from 'firebase/app';
-import {getAuth, signInWithEmailAndPassword} from 'firebase/auth';
+import {createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword} from 'firebase/auth';
+import { UserObj } from '../types';
 
 export const firebaseConfig = {
     apiKey: "AIzaSyBS8rvb4pFIz_0o1oMEgJ0y8UBWEzpQLXw",
@@ -57,4 +58,41 @@ export const loginUser = async (email: string, password: string): Promise<string
 
     console.log('Login complete');
     return response;
+}
+
+export const createNewUserDb = async (email: string, password: string, name: string) => {
+    const uid = await createUserWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+            const user = userCredential.user;
+            return user.uid;
+        })
+        .catch(error => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+        });
+
+    const uidStr = uid as string;
+    const data: UserObj = { name, uid: uidStr};
+
+    await setDoc(doc(db, 'users', uidStr ), data);
+
+    return data;
+}
+
+export const getUsersLists = async (userId: string) => {
+    const listsRef = collection(db, 'lists');
+    const q = query(listsRef, where("userId", '==', userId));
+
+    const responseList: any[] = [];
+    const querySnapshot = await getDocs(q);
+
+
+    querySnapshot.forEach(doc => {
+        responseList.push(doc.data());
+    });
+
+    console.log(responseList);
+
+    return responseList;
 }

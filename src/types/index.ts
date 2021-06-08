@@ -17,3 +17,13 @@ export interface SetUserDataAction extends Action {
     type: 'SET_USER_DATA',
     payload: object
 }
+
+
+export interface UserObj {
+    name: string
+    uid: string
+}
+
+export interface State {
+    user: UserObj
+}
