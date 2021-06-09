@@ -7,11 +7,9 @@ import {setActiveList} from '../actions';
 
 const Container = styled.div`
     background-color: var(--menu-color);
-    width: 300px;
-
-    position: absolute;
-    top: 50px;
-    bottom: 0px;
+    width: 100%;
+    max-width: 350px;
+    height: 100%;
 `;
 
 const Head = styled.div`
@@ -19,8 +17,6 @@ const Head = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    margin-top: 20px;
 `;
 
 const AvatarImage = styled.img`
@@ -54,6 +50,8 @@ const ListItem = styled.div<StyledDivProps>`
     margin-left: 10px;
     margin-right: 10px;
     border-radius: 5px;
+
+    transition: 150ms;
 
     color: var(${props => props.isSelected ? '--primary-text-color' : '--secondary-text-color'});
 

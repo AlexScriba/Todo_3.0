@@ -1,4 +1,4 @@
-import react, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
@@ -7,6 +7,31 @@ import { attemptLogin } from '../actions';
 import Header from '../components/Header';
 import ListMenu from '../components/ListMenu';
 import TodoView from '../components/TodoView';
+
+const Container = styled.div`
+    position: fixed;
+
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+`;
+
+const Body = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+
+    height: 100%;
+
+    @media (min-width: 960px) {
+        grid-template-columns: 1fr 2fr 1fr;
+    }
+`;
+
+const ListMenuWrapper = styled.div`
+    width: 100%;
+    height: 100%;
+`;
 
 interface Props {
     attemptLogin: any
@@ -23,19 +48,14 @@ const HomePage = (props: Props) => {
         <Container>
             <Header />
             <Body>
-                <ListMenu />
+                <ListMenuWrapper>
+                    <ListMenu />
+                </ListMenuWrapper>
                 <TodoView />
             </Body>
         </Container>
     );
 }
 
-const Container = styled.div`
-
-`;
-
-const Body = styled.div`
-    
-`;
 
 export default connect(null, {attemptLogin})(HomePage);
