@@ -1,6 +1,6 @@
 import { createNewListForUser, fetchUserDataFromDb, getListTodos, getUsersLists, loginUser } from '../tools/firebase';
 import { createNewUserDb } from '../tools/firebase';
-import { ListObj, SetActiveListAction, State } from '../types';
+import { ListObj } from '../types';
 
 // Users
 
