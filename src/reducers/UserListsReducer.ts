@@ -1,6 +1,6 @@
 import {Action} from '../types';
 
-const setUserLists = (state: object[] = [], action: Action) => {
+const UserListsReducer = (state: object[] = [], action: Action) => {
     switch(action.type){
         case 'SET_USER_LISTS':
             return action.payload;
@@ -9,4 +9,4 @@ const setUserLists = (state: object[] = [], action: Action) => {
     }
 }
 
-export default setUserLists;
+export default UserListsReducer;

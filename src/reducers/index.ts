@@ -1,9 +1,13 @@
 import {combineReducers} from 'redux';
 
-import setUserData from './setUserData';
-import setUserLists from './setUserLists';
+import UserDataReducer from './UserDataReducer';
+import UserListsReducer from './UserListsReducer';
+import ListTodosReducer from './ListTodosReducer';
+import ActiveListReducer from './ActiveListReducer';
 
 export default combineReducers({
-    user: setUserData,
-    lists: setUserLists,
+    user: UserDataReducer,
+    lists: UserListsReducer,
+    activeListId: ActiveListReducer,
+    todos: ListTodosReducer,
 });

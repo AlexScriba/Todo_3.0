@@ -1,7 +1,7 @@
-import {DocumentData, getFirestore, doc, getDoc, collection, query, where, getDocs, setDoc} from 'firebase/firestore';
+import {DocumentData, getFirestore, doc, getDoc, collection, query, where, getDocs, setDoc, addDoc} from 'firebase/firestore';
 import {initializeApp} from 'firebase/app';
 import {createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword} from 'firebase/auth';
-import { UserObj } from '../types';
+import { ListObj, TodoObj, UserObj } from '../types';
 
 export const firebaseConfig = {
     apiKey: "AIzaSyBS8rvb4pFIz_0o1oMEgJ0y8UBWEzpQLXw",
@@ -84,15 +84,52 @@ export const getUsersLists = async (userId: string) => {
     const listsRef = collection(db, 'lists');
     const q = query(listsRef, where("userId", '==', userId));
 
-    const responseList: any[] = [];
+    const responseList: ListObj[] = [];
     const querySnapshot = await getDocs(q);
 
 
     querySnapshot.forEach(doc => {
-        responseList.push(doc.data());
+        const retObj = doc.data() as ListObj;
+        responseList.push({listId: doc.id, userId: retObj.userId, listName: retObj.listName});
     });
 
     console.log(responseList);
 
     return responseList;
 }
+
+//create lists
+export const createNewListForUser = async (data: ListObj): Promise<ListObj> => {
+    const listRef = collection(db, 'lists');
+    const response = await addDoc(listRef , data);
+    console.log(response.id);
+    return {...data, listId: response.id};
+}
+
+//delete lists
+
+//edit lists
+
+
+//fetch todos
+export const getListTodos = async (listId: string) => {
+    const todosRef = collection(db, 'todoItems');
+    const q = query(todosRef, where('list', '==', listId));
+
+    const responseList: TodoObj[] = [];
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach(doc => {
+        const retObj = doc.data() as TodoObj;
+        responseList.push({...retObj, todoId: doc.id});
+    });
+
+    console.log(responseList);
+    return responseList;
+}
+
+//create todos
+
+//delete todos
+
+//edit todos 

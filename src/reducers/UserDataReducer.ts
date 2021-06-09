@@ -1,6 +1,6 @@
 import {Action, UserObj} from '../types';
 
-const setUserData = (state: UserObj | object = {}, action: Action) => {
+const UserDataReducer = (state: UserObj | object = {}, action: Action) => {
     switch(action.type){
         case 'SET_USER_DATA':
             return action.payload;
@@ -9,4 +9,4 @@ const setUserData = (state: UserObj | object = {}, action: Action) => {
     }
 }
 
-export default setUserData;
+export default UserDataReducer;
