@@ -42,6 +42,7 @@ const HomePage = (props: Props) => {
     useEffect(() => {
         props.attemptLogin('test@gmail.com', 'test1234');
 
+        // eslint-disable-next-line
     }, []);
 
     return (

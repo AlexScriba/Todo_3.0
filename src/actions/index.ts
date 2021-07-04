@@ -1,6 +1,6 @@
-import { createNewListForUser, fetchUserDataFromDb, getListTodos, getUsersLists, loginUser } from '../tools/firebase';
+import { createNewListForUser, fetchUserDataFromDb, getListTodos, getUsersLists, loginUser, updateTodoDb } from '../tools/firebase';
 import { createNewUserDb } from '../tools/firebase';
-import { ListObj } from '../types';
+import { ListObj, State, TodoObjUpdate, TodoObj } from '../types';
 
 // Users
 
@@ -75,9 +75,20 @@ export const setActiveList = (listId: string) => async (dispatch: any) => {
 // Todos
 
 export const setActiveListTodos = () => async (dispatch: any, getState: any) => {
-    console.log('Tried fetchin todos');
     if(getState().activeListId){
         const todos = await getListTodos(getState().activeListId);
         dispatch({type: 'SET_ACTIVE_LIST_TODOS', payload: todos});
     }
+}
+
+export const updateTodo = (todoId: string, changes: TodoObjUpdate) => async (dispatch: any, getState: () => State) => {
+    updateTodoDb(todoId, changes);
+
+    const todos: TodoObj[] = [...getState().todos];
+    console.log(todos);
+    let targetIndex = todos.findIndex((value) => value.todoId === todoId);
+
+    todos[targetIndex] = {...todos[targetIndex], ...changes};
+
+    dispatch({type: 'SET_ACTIVE_LIST_TODOS', payload: todos});
 }

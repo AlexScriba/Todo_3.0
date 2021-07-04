@@ -1,7 +1,7 @@
-import {DocumentData, getFirestore, doc, getDoc, collection, query, where, getDocs, setDoc, addDoc} from 'firebase/firestore';
+import {DocumentData, getFirestore, doc, getDoc, collection, query, where, getDocs, setDoc, addDoc, runTransaction} from 'firebase/firestore';
 import {initializeApp} from 'firebase/app';
 import {createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword} from 'firebase/auth';
-import { ListObj, TodoObj, UserObj } from '../types';
+import { ListObj, TodoObj, TodoObjUpdate, UserObj } from '../types';
 
 export const firebaseConfig = {
     apiKey: "AIzaSyBS8rvb4pFIz_0o1oMEgJ0y8UBWEzpQLXw",
@@ -133,3 +133,19 @@ export const getListTodos = async (listId: string) => {
 //delete todos
 
 //edit todos 
+export const updateTodoDb = async (todoId: string, changes: TodoObjUpdate) => {
+    const todoDocRef = doc(db, 'todoItems', todoId);
+
+    try{
+        await runTransaction(db, async (transaction) => {
+            const todoDoc = await transaction.get(todoDocRef);
+            if(!todoDoc.exists()){
+                console.log('Error - doc doesnt exits');
+            }
+
+            transaction.update(todoDocRef, {...changes});
+        });
+    } catch (e) {
+        console.log('Transaction failes: ', e);
+    }
+}

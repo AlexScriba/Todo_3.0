@@ -1,7 +1,9 @@
-import { useState } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { State, TodoObj } from '../types';
+
+import { State, TodoObj, TodoObjUpdate } from '../types';
+import {updateTodo} from '../actions';
+
 import Checkbox from './Checkbox';
 
 const Container = styled.div`
@@ -48,30 +50,38 @@ const TodoItem = styled.div`
 
 interface Props {
     todos: TodoObj[]
+    updateTodo: any
 }
 
 const TodoView = (props: Props) => {
-    const [checked, setChecked] = useState(false);
 
-    const handleCheckboxChanged = () => {
-        setChecked(!checked);
+    const handleCheckboxChanged = (todoId: string, checked: boolean) => {
+        const changes: TodoObjUpdate = {
+            complete: !checked,
+        }
+
+        props.updateTodo(todoId, changes);
     }
 
     const renderedTodos = props.todos.map(item => {
-        return <TodoItem key={item.todoId}>
+        return (
+            <TodoItem key={item.todoId}>
+                <span style={{textDecoration: item.complete? 'line-through': 'none'}} >
                     {item.title}
-                    <Checkbox 
-                        checked={item.complete}
-                        onChange={handleCheckboxChanged}
-                    />
-                </TodoItem>;
-    })
+                </span>
+                <Checkbox 
+                    checked={item.complete}
+                    onChange={handleCheckboxChanged}
+                    todoId={item.todoId as string}
+                />
+            </TodoItem>
+        );
+    });
 
     return (
         <Container>
             <Card>
                 {renderedTodos}
-                <Checkbox checked={checked} onChange={handleCheckboxChanged} />
             </Card>
         </Container>
     );
@@ -81,4 +91,4 @@ const mapStateToProps = (state: State) => {
     return {todos: state.todos};
 }
 
-export default connect(mapStateToProps, {})(TodoView);
+export default connect(mapStateToProps, {updateTodo})(TodoView);

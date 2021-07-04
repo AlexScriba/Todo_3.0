@@ -54,3 +54,11 @@ export interface TodoObj {
     title: string
     todoId?: string
 }
+
+export interface TodoObjUpdate {
+    complete?: boolean
+    description?: string
+    list?: string
+    title?: string
+    todoId?: string
+}

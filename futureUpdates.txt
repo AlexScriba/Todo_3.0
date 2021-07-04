@@ -1,0 +1,6 @@
+1.
+When changes happen, wait 10-20 seconds before updating database and make
+changes locally in the meantime and record all changes and then send all
+changes to server at once.
+
+This is to minimise database reads and writes.

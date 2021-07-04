@@ -27,12 +27,12 @@ const StyledCheckbox = styled.div<StyledCheckBoxProps>`
     display: inline-block;
     width: 16px;
     height: 16px;
-    background: ${props => props.checked? 'salmon': 'papayawhip'};
+    background: ${props => props.checked? 'var(--accent-color)': '#ffffff'};
     border-radius: 3px;
     transition: all 150ms;
 
     ${HiddenCheckbox}:focus + & {
-        box-shadow: 0 0 0 3px pink;
+        box-shadow: 0 0 0 3px var(--accent-color-lighter);
     }
 
     ${Icon} {
@@ -49,20 +49,25 @@ const CheckboxContainer = styled.div`
 
 interface Props {
     checked: boolean
-    onChange: () => void
+    todoId: string
+    onChange: (todoId: string, checked: boolean) => void
 }
 
-const Checkbox = (props: Props) => (
-    <label>
-        <CheckboxContainer>
-            <HiddenCheckbox {...props}/>
-            <StyledCheckbox checked={props.checked}>
-                <Icon viewBox="0 0 24 24">
-                    <polyline points="20 0 9 13 4 8" />
-                </Icon>
-            </StyledCheckbox>
-        </CheckboxContainer>
-    </label>
-);
+const Checkbox = (props: Props) => {
+    const handleOnChange = () => props.onChange(props.todoId, props.checked);
+
+    return (
+        <label>
+            <CheckboxContainer>
+                <HiddenCheckbox onChange={handleOnChange} checked={props.checked} />
+                <StyledCheckbox checked={props.checked}>
+                    <Icon viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                    </Icon>
+                </StyledCheckbox>
+            </CheckboxContainer>
+        </label>
+    );
+    }
 
 export default Checkbox;
