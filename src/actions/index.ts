@@ -1,4 +1,4 @@
-import { createNewListForUser, fetchUserDataFromDb, getListTodos, getUsersLists, loginUser, updateTodoDb } from '../tools/firebase';
+import { createNewListForUser, createNewTodoDB, fetchUserDataFromDb, getListTodos, getUsersLists, loginUser, updateTodoDb } from '../tools/firebase';
 import { createNewUserDb } from '../tools/firebase';
 import { ListObj, State, TodoObjUpdate, TodoObj } from '../types';
 
@@ -74,7 +74,23 @@ export const setActiveList = (listId: string) => async (dispatch: any) => {
 //-------------------------------------------------------------------------------------------------------
 // Todos
 
+export const createNewTodo = (listId: string, todoName: string, todoDescription: string) => async (dispatch: any) => {
+    console.log('action ran');
+    const data: TodoObj = {
+        complete: false,
+        description: todoDescription,
+        list: listId,
+        title: todoName,
+    }
+
+    const retData = await createNewTodoDB(data);
+    console.log(retData);
+
+    dispatch(setActiveListTodos());
+}
+
 export const setActiveListTodos = () => async (dispatch: any, getState: any) => {
+    dispatch({type: 'SET_aCTIVE_LIST_TODOS', payload: {}});
     if(getState().activeListId){
         const todos = await getListTodos(getState().activeListId);
         dispatch({type: 'SET_ACTIVE_LIST_TODOS', payload: todos});

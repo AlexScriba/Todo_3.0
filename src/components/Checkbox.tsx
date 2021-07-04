@@ -31,6 +31,8 @@ const StyledCheckbox = styled.div<StyledCheckBoxProps>`
     border-radius: 3px;
     transition: all 150ms;
 
+    cursor: pointer;
+
     ${HiddenCheckbox}:focus + & {
         box-shadow: 0 0 0 3px var(--accent-color-lighter);
     }

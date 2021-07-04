@@ -129,6 +129,12 @@ export const getListTodos = async (listId: string) => {
 }
 
 //create todos
+export const createNewTodoDB = async (data: TodoObj): Promise<TodoObj> => {
+    const todoRef = collection(db, 'todoItems');
+    const response = await addDoc(todoRef, data);
+    console.log(response.id);
+    return {...data, todoId: response.id};
+}
 
 //delete todos
 
