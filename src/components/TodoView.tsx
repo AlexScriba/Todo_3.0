@@ -3,10 +3,11 @@ import styled from 'styled-components';
 import { useState } from 'react';
 
 import { ListObj, State, TodoObj, TodoObjUpdate } from '../types';
-import {updateTodo} from '../actions';
+import { updateTodo } from '../actions';
 
 import Checkbox from './Checkbox';
 import AddTodoBox from './AddTodoBox';
+import { useEffect } from 'react';
 
 const Container = styled.div`
 	margin: 0;
@@ -33,7 +34,7 @@ const Card = styled.div`
 
 const TodoItem = styled.div`
 	font-size: 0.8rem;
-	
+
 	padding: 10px;
 	border-radius: 5px;
 
@@ -44,17 +45,26 @@ const TodoItem = styled.div`
 	display: flex;
 	justify-content: space-between;
 
-	:hover{
+	:hover {
 		background-color: var(--hover-color);
 	}
-	
+`;
+
+interface TodoTextProps {
+	complete: boolean;
+}
+
+const TodoText = styled.div<TodoTextProps>`
+	color: ${(props) =>
+		props.complete ? 'var(--secondary-text-color)' : 'var(--primary-text-color)'};
+
+	text-decoration: ${(props) => (props.complete ? 'line-through' : 'none')};
 `;
 
 const HeaderArea = styled.div`
 	padding-bottom: 20px;
 	display: flex;
 	justify-content: space-between;
-
 `;
 
 const ListNameText = styled.span`
@@ -79,36 +89,38 @@ const AddButton = styled.div`
 	}
 `;
 
-const TodoArea = styled.div`
-	
-`;
+const TodoArea = styled.div``;
 
 interface Props {
-	todos: TodoObj[]
-	updateTodo: any
-	activeList: ListObj
+	todos: TodoObj[];
+	updateTodo: any;
+	activeList: ListObj;
 }
 
 const TodoView = (props: Props) => {
 	const [addingTodo, setAddingTodo] = useState(false);
 
+	//ensure the AddTodoBox disappears when new list is selected
+	const listId = props.activeList?.listId;
+	useEffect(() => {
+		setAddingTodo(false);
+	}, [listId]);
+
 	// Function to handle when the checkbox is pressed
 	const handleCheckboxChanged = (todoId: string, checked: boolean) => {
 		const changes: TodoObjUpdate = {
 			complete: !checked,
-		}
+		};
 
 		props.updateTodo(todoId, changes);
-	}
+	};
 
 	// rendering the Todo items
-	const renderedTodos = props.todos.map(item => {
+	const renderedTodos = props.todos?.map((item) => {
 		return (
 			<TodoItem key={item.todoId}>
-				<span style={{textDecoration: item.complete? 'line-through': 'none'}} >
-					{item.title}
-				</span>
-				<Checkbox 
+				<TodoText complete={item.complete}>{item.title}</TodoText>
+				<Checkbox
 					checked={item.complete}
 					onChange={handleCheckboxChanged}
 					todoId={item.todoId as string}
@@ -117,30 +129,27 @@ const TodoView = (props: Props) => {
 		);
 	});
 
+	//Return TSX
 	return (
 		<Container>
 			<Card>
 				<HeaderArea>
-					<ListNameText>
-						{props.activeList?.listName}:
-					</ListNameText>
-					<AddButton onClick={() => setAddingTodo(true)}>
-						+
-					</AddButton>
+					<ListNameText>{props.activeList?.listName}:</ListNameText>
+					<AddButton onClick={() => setAddingTodo(true)}>+</AddButton>
 				</HeaderArea>
 				<TodoArea>
-					{addingTodo? <AddTodoBox activeListWhenCreated={props.activeList.listId} onClosePressed={() => setAddingTodo(false)} />: null}
+					{addingTodo ? <AddTodoBox onClosePressed={() => setAddingTodo(false)} /> : null}
 					{renderedTodos}
 				</TodoArea>
 			</Card>
 		</Container>
 	);
-}
+};
 
 const mapStateToProps = (state: State) => {
 	const activeListIndex = state.lists.findIndex((item) => item.listId === state.activeListId);
 
-	return {todos: state.todos, activeList: state.lists[activeListIndex]};
-}
+	return { todos: state.todos, activeList: state.lists[activeListIndex] };
+};
 
-export default connect(mapStateToProps, {updateTodo})(TodoView);
+export default connect(mapStateToProps, { updateTodo })(TodoView);

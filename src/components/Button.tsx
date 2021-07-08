@@ -1,11 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 interface ButtonProps {
-	width?: string
+	width?: string;
 }
 
 const StyledButton = styled.button<ButtonProps>`
-	width: ${props => props.width};
+	width: ${(props) => props.width};
 	min-height: 30px;
 
 	cursor: pointer;
@@ -27,18 +27,20 @@ const StyledButton = styled.button<ButtonProps>`
 `;
 
 interface Props {
-	children?: any
-	width?: string
-	onClick: () => void
+	children?: any;
+	width?: string;
+	onClick: () => void;
 }
 
 const Button = (props: Props) => {
-	return <StyledButton 
-				onClick={props.onClick} 
-				width={props.width? props.width: "25%"}
-			>
-				{props.children}
-			</StyledButton>
-}
+	return (
+		<StyledButton
+			onClick={props.onClick}
+			width={props.width ? props.width : '25%'}
+		>
+			{props.children}
+		</StyledButton>
+	);
+};
 
 export default Button;

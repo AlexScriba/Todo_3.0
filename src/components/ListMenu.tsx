@@ -1,105 +1,103 @@
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import {ListObj, State, UserObj} from '../types';
-import {setActiveList} from '../actions';
+import { ListObj, State } from '../types';
 
-const Container = styled.div`
-    background-color: var(--menu-color);
-    width: 100%;
-    max-width: 350px;
-    height: 100%;
-`;
-
-const Head = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
-
-const AvatarImage = styled.img`
-    width: 30%;
-    border-radius: 50%;
-`;
-
-const HeaderText = styled.h1`
-    margin: 0;
-    font-size: 1.2rem;
-`;
-
-const Rule = styled.hr`
-    border: none;
-
-    background-color: var(--hover-color);
-    width: 90%;
-    height: 1px;
-`;
+import { setActiveList } from '../actions';
+import AddListBox from './AddListBox';
 
 const List = styled.div`
-    width: 100%;
+	height: 100%;
+	padding: 10px;
 `;
 
-interface StyledDivProps{
-    isSelected?: boolean
+const HeaderArea = styled.div`
+	display: flex;
+	justify-content: space-between;
+`;
+
+const HeaderText = styled.div`
+	font-size: 1.1rem;
+	color: var(--secondary-text-color);
+
+	padding-top: 0px;
+`;
+
+const AddButton = styled.div`
+	font-size: 1.1rem;
+	color: var(--secondary-text-color);
+
+	border-radius: 5px;
+	cursor: pointer;
+
+	padding: 0 5px 5px 5px;
+
+	:hover {
+		background-color: var(--hover-color);
+	}
+`;
+
+const ListArea = styled.div`
+	height: 100%;
+	width: 100%;
+`;
+
+interface StyledDivProps {
+	isSelected?: boolean;
 }
 
 const ListItem = styled.div<StyledDivProps>`
-    padding: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
-    border-radius: 5px;
+	border-radius: 5px;
+	padding: 5px 10px 5px 10px;
 
-    transition: 150ms;
+	transition: 150ms;
 
-    color: var(${props => props.isSelected ? '--primary-text-color' : '--secondary-text-color'});
+	color: var(
+		${(props) => (props.isSelected ? '--primary-text-color' : '--secondary-text-color')}
+	);
 
-    cursor: pointer;
+	cursor: pointer;
 
-    :hover{
-        background-color: var(--hover-color);
-    }
-
+	:hover {
+		background-color: var(--hover-color);
+	}
 `;
 
 interface Props {
-    user: UserObj
-    lists: ListObj[]
-    activeListId: string
-
-    setActiveList: any
+	activeListId: string;
+	lists: ListObj[];
+	setActiveList: any;
 }
 
 const ListMenu = (props: Props) => {
+	//Rendering list items
+	const renderedList = props.lists.map((item) => (
+		<ListItem
+			key={item.listId}
+			onClick={() => props.setActiveList(item.listId)}
+			isSelected={props.activeListId === item.listId}
+		>
+			{item.listName}
+		</ListItem>
+	));
 
-    const renderedList = props.lists.map(item => {
-        return <ListItem 
-                    key={item.listId} 
-                    onClick={() => props.setActiveList(item.listId)}
-                    isSelected={props.activeListId === item.listId}
-                >
-                    {item.listName}
-                </ListItem>;
-    });
-
-    return (
-        <Container>
-            <Head>
-                <AvatarImage src={require('../assets/avatar_placeholder.png').default} alt="Avatar" />
-                <HeaderText>
-                    {props.user.name}
-                </HeaderText>
-            </Head>
-            <Rule />
-            <List>
-                {renderedList}
-            </List>
-        </Container>
-    );
-}
+	return (
+		<List>
+			<HeaderArea>
+				<HeaderText>Available Lists:</HeaderText>
+				<AddButton>+</AddButton>
+			</HeaderArea>
+			<AddListBox />
+			<ListArea>{renderedList}</ListArea>
+		</List>
+	);
+};
 
 const mapStateToProps = (state: State) => {
-    return {user: state.user, lists: state.lists, activeListId: state.activeListId};
-}
+	return {
+		lists: state.lists,
+		activeListId: state.activeListId,
+	};
+};
 
-export default connect(mapStateToProps, {setActiveList})(ListMenu);
+export default connect(mapStateToProps, { setActiveList })(ListMenu);

@@ -19,6 +19,7 @@ body {
 	--accent-color: #5924bb;
 	--accent-color-lighter: #794bce;
 
-	font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+	font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
+		sans-serif;
 	font-size: 20px;
 }

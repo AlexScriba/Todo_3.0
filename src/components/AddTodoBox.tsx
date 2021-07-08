@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
-import { connect } from "react-redux";
-import styled from "styled-components";
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import styled from 'styled-components';
 
-import { createNewTodo } from "../actions";
-import { State } from "../types";
+import { createNewTodo } from '../actions';
+import { State } from '../types';
 
-import Button from "./Button";
+import Button from './Button';
 
 const Container = styled.div`
 	padding: 10px;
@@ -46,7 +45,7 @@ const BodyArea = styled.div`
 `;
 
 interface InputProps {
-	error?: boolean
+	error?: boolean;
 }
 
 const TodoNameInput = styled.input<InputProps>`
@@ -55,7 +54,7 @@ const TodoNameInput = styled.input<InputProps>`
 
 	background-color: var(--menu-color);
 
-	border: ${props => props.error? "1px solid red": 'none'};
+	border: ${(props) => (props.error ? '1px solid red' : 'none')};
 	border-radius: 5px;
 
 	outline: none;
@@ -64,7 +63,7 @@ const TodoNameInput = styled.input<InputProps>`
 	font-size: 0.8rem;
 	font-family: inherit;
 
-	:focus{
+	:focus {
 		margin: 9px -1px 9px -1px;
 		border: 1px solid var(--accent-color);
 	}
@@ -78,7 +77,7 @@ const TodoDescriptionInput = styled.textarea<InputProps>`
 
 	background-color: var(--menu-color);
 
-	border: ${props => props.error? "1px solid red": 'none'};
+	border: ${(props) => (props.error ? '1px solid red' : 'none')};
 	border-radius: 5px;
 
 	outline: none;
@@ -87,7 +86,7 @@ const TodoDescriptionInput = styled.textarea<InputProps>`
 	font-size: 0.8rem;
 	font-family: inherit;
 
-	:focus{
+	:focus {
 		margin: -1px -1px 9px -1px;
 		border: 1px solid var(--accent-color);
 	}
@@ -98,23 +97,20 @@ const ButtonContainer = styled.div`
 	justify-content: center;
 `;
 
-interface Props{
-	activeListId: string
-	activeListWhenCreated: string | undefined	//for latest change see bottom
-	onClosePressed: () => void
-	createNewTodo: (listId: string, todoName: string, todoDescription: string) => void
+interface Props {
+	activeListId: string;
+	onClosePressed: () => void;
+	createNewTodo: (listId: string, todoName: string, todoDescription: string) => void;
 }
 
 const AddTodoBox = (props: Props) => {
-	const [todoName, setTodoName] = useState("");
-	const [todoDescription, setTodoDescription] = useState("");
+	const [todoName, setTodoName] = useState('');
+	const [todoDescription, setTodoDescription] = useState('');
 	const [nameError, setNameError] = useState(false);
-
-	const { activeListId, activeListWhenCreated } = props;
 
 	//function to add new todo item to db
 	const handleSubmit = () => {
-		if(!todoName){
+		if (!todoName) {
 			setNameError(true);
 			return;
 		}
@@ -122,63 +118,53 @@ const AddTodoBox = (props: Props) => {
 		console.log('clicked');
 		props.createNewTodo(props.activeListId, todoName, todoDescription);
 		props.onClosePressed();
-	}
+	};
 
 	//function to handle validation
 	const handleValidation = (
-			onChangeFunc: React.Dispatch<React.SetStateAction<string>>, 
-			onErrorFunc: React.Dispatch<React.SetStateAction<boolean>>,
-			val: string
-		) => {
-
-			if(!val){
-				onErrorFunc(true);
-			} else {
-				onErrorFunc(false);
-			}
-			
-			onChangeFunc(val);
+		onChangeFunc: React.Dispatch<React.SetStateAction<string>>,
+		onErrorFunc: React.Dispatch<React.SetStateAction<boolean>>,
+		val: string
+	) => {
+		if (!val) {
+			onErrorFunc(true);
+		} else {
+			onErrorFunc(false);
 		}
+
+		onChangeFunc(val);
+	};
 
 	return (
 		<Container>
 			<HeadingArea>
-				<Heading>
-					Add new Item:
-				</Heading>
-				<ExitButton onClick={props.onClosePressed}>
-					X
-				</ExitButton>
+				<Heading>Add new Item:</Heading>
+				<ExitButton onClick={props.onClosePressed}>X</ExitButton>
 			</HeadingArea>
 			<BodyArea>
-				<TodoNameInput 
-					placeholder="Item Name" 
-					value={todoName} 
-					onChange={e => handleValidation(setTodoName, setNameError, e.target.value)}
+				<TodoNameInput
+					placeholder="Item Name"
+					value={todoName}
+					onChange={(e) => handleValidation(setTodoName, setNameError, e.target.value)}
 					error={nameError}
 				/>
-				<TodoDescriptionInput 
-					placeholder="Description" 
-					value={todoDescription} 
-					onChange={e => setTodoDescription(e.target.value)} 
+				<TodoDescriptionInput
+					placeholder="Description"
+					value={todoDescription}
+					onChange={(e) => setTodoDescription(e.target.value)}
 				/>
 				<ButtonContainer>
-					<Button 
-						onClick={handleSubmit} 
-						width="25%" 
-					>
+					<Button onClick={handleSubmit} width="25%">
 						ADD
 					</Button>
 				</ButtonContainer>
 			</BodyArea>
 		</Container>
 	);
-}
+};
 
 const mapStateToProps = (state: State) => {
-	return {activeListId: state.activeListId}
-}
+	return { activeListId: state.activeListId };
+};
 
-export default connect(mapStateToProps, {createNewTodo})(AddTodoBox);
-
-//latest change, make AddTodoBox go away on list change.
+export default connect(mapStateToProps, { createNewTodo })(AddTodoBox);
