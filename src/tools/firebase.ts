@@ -10,13 +10,10 @@ import {
 	setDoc,
 	addDoc,
 	runTransaction,
+	deleteDoc,
 } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-import {
-	createUserWithEmailAndPassword,
-	getAuth,
-	signInWithEmailAndPassword,
-} from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { ListObj, TodoObj, TodoObjUpdate, UserObj } from '../types';
 
 export const firebaseConfig = {
@@ -33,9 +30,7 @@ export const firebaseApp = initializeApp(firebaseConfig);
 export const db = getFirestore();
 export const auth = getAuth();
 
-export const fetchUserDataFromDb = async (
-	uid: string
-): Promise<DocumentData | null> => {
+export const fetchUserDataFromDb = async (uid: string): Promise<DocumentData | null> => {
 	const docRef = doc(db, 'users', uid);
 	console.log(`Fetching data from tools - id: ${uid}`);
 
@@ -51,10 +46,7 @@ export const fetchUserDataFromDb = async (
 	}
 };
 
-export const loginUser = async (
-	email: string,
-	password: string
-): Promise<string | null> => {
+export const loginUser = async (email: string, password: string): Promise<string | null> => {
 	const response = await signInWithEmailAndPassword(auth, email, password)
 		.then((userCredential) => {
 			let user = userCredential.user;
@@ -79,11 +71,7 @@ export const loginUser = async (
 	return response;
 };
 
-export const createNewUserDb = async (
-	email: string,
-	password: string,
-	name: string
-) => {
+export const createNewUserDb = async (email: string, password: string, name: string) => {
 	const uid = await createUserWithEmailAndPassword(auth, email, password)
 		.then((userCredential) => {
 			const user = userCredential.user;
@@ -133,6 +121,9 @@ export const createNewListForUser = async (data: ListObj): Promise<ListObj> => {
 };
 
 //delete lists
+export const deleteListDb = async (listId: string): Promise<void> => {
+	await deleteDoc(doc(db, 'lists', listId));
+};
 
 //edit lists
 
@@ -154,7 +145,7 @@ export const getListTodos = async (listId: string) => {
 };
 
 //create todos
-export const createNewTodoDB = async (data: TodoObj): Promise<TodoObj> => {
+export const createNewTodoDb = async (data: TodoObj): Promise<TodoObj> => {
 	const todoRef = collection(db, 'todoItems');
 	const response = await addDoc(todoRef, data);
 	console.log(response.id);
@@ -162,6 +153,9 @@ export const createNewTodoDB = async (data: TodoObj): Promise<TodoObj> => {
 };
 
 //delete todos
+export const deleteTodoDb = async (todoId: string): Promise<void> => {
+	await deleteDoc(doc(db, 'todoItems', todoId));
+};
 
 //edit todos
 export const updateTodoDb = async (todoId: string, changes: TodoObjUpdate) => {

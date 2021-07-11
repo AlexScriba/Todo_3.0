@@ -3,10 +3,11 @@ import styled from 'styled-components';
 
 import { ListObj, State } from '../types';
 
-import { setActiveList } from '../actions';
+import { setActiveList, deleteList } from '../actions';
 import AddListBox from './AddListBox';
 import { useState } from 'react';
 import PlusButton from './PlusButton';
+import DeleteButton from './DeleteButton';
 
 const List = styled.div`
 	height: 100%;
@@ -31,19 +32,14 @@ const ListArea = styled.div`
 	width: 100%;
 `;
 
-interface StyledDivProps {
-	isSelected?: boolean;
-}
-
-const ListItem = styled.div<StyledDivProps>`
+const ListItem = styled.div`
 	border-radius: 5px;
 	padding: 5px 10px 5px 10px;
 
-	transition: 150ms;
+	display: flex;
+	justify-content: space-between;
 
-	color: var(
-		${(props) => (props.isSelected ? '--primary-text-color' : '--secondary-text-color')}
-	);
+	transition: 150ms;
 
 	cursor: pointer;
 
@@ -52,10 +48,32 @@ const ListItem = styled.div<StyledDivProps>`
 	}
 `;
 
+const DeleteBtnArea = styled.div`
+	padding: 0;
+	margin: 0;
+	visibility: hidden;
+	transition: 50ms;
+
+	${ListItem}:hover & {
+		visibility: visible;
+	}
+`;
+
+interface StyledDivProps {
+	isSelected?: boolean;
+}
+
+const ListName = styled.div<StyledDivProps>`
+	color: var(
+		${(props) => (props.isSelected ? '--primary-text-color' : '--secondary-text-color')}
+	);
+`;
+
 interface Props {
 	activeListId: string;
 	lists: ListObj[];
 	setActiveList: any;
+	deleteList: (listId: string | undefined) => void;
 }
 
 const ListMenu = (props: Props) => {
@@ -63,12 +81,11 @@ const ListMenu = (props: Props) => {
 
 	//Rendering list items
 	const renderedList = props.lists.map((item) => (
-		<ListItem
-			key={item.listId}
-			onClick={() => props.setActiveList(item.listId)}
-			isSelected={props.activeListId === item.listId}
-		>
-			{item.listName}
+		<ListItem key={item.listId} onClick={() => props.setActiveList(item.listId)}>
+			<ListName isSelected={props.activeListId === item.listId}>{item.listName}</ListName>
+			<DeleteBtnArea>
+				<DeleteButton onClick={() => props.deleteList(item.listId)} />
+			</DeleteBtnArea>
 		</ListItem>
 	));
 
@@ -91,4 +108,4 @@ const mapStateToProps = (state: State) => {
 	};
 };
 
-export default connect(mapStateToProps, { setActiveList })(ListMenu);
+export default connect(mapStateToProps, { setActiveList, deleteList })(ListMenu);

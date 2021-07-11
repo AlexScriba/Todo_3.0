@@ -1,16 +1,15 @@
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const AddButton = styled.div`
+const DelButton = styled.div`
 	color: var(--secondary-text-color);
 
 	border-radius: 5px;
+	padding: 0 10px 5px 10px;
 	cursor: pointer;
 
-	padding: 0 10px 5px 10px;
-
 	:hover {
-		background-color: var(--hover-color);
+		color: var(--primary-text-color);
 	}
 `;
 
@@ -18,12 +17,12 @@ interface Props {
 	onClick: () => void;
 }
 
-const PlusButton = (props: Props) => {
+const DeleteButton = (props: Props) => {
 	return (
-		<AddButton onClick={props.onClick}>
-			<FontAwesomeIcon icon="plus" size="xs" />
-		</AddButton>
+		<DelButton onClick={props.onClick}>
+			<FontAwesomeIcon icon="trash" size="xs" />
+		</DelButton>
 	);
 };
 
-export default PlusButton;
+export default DeleteButton;

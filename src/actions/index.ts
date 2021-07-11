@@ -1,6 +1,8 @@
 import {
 	createNewListForUser,
-	createNewTodoDB,
+	createNewTodoDb,
+	deleteListDb,
+	deleteTodoDb,
 	fetchUserDataFromDb,
 	getListTodos,
 	getUsersLists,
@@ -51,16 +53,17 @@ export const setUserDataFromId = (uid: string) => async (dispatch: any) => {
 //-------------------------------------------------------------------------------------------------------
 //Lists
 
-export const setUserLists = (uid: string) => async (dispatch: any) => {
-	const lists = await getUsersLists(uid);
+export const setUserLists =
+	(uid: string, setIndex: boolean = true) =>
+	async (dispatch: any) => {
+		const lists = await getUsersLists(uid);
 
-	dispatch({ type: 'SET_USER_LISTS', payload: lists });
+		dispatch({ type: 'SET_USER_LISTS', payload: lists });
 
-	if (lists && lists[0] && lists[0].listId) {
-		dispatch(setActiveList(lists[0].listId));
-		// dispatch(setActiveListTodos());
-	}
-};
+		if (setIndex && lists && lists[0] && lists[0].listId) {
+			dispatch(setActiveList(lists[0].listId));
+		}
+	};
 
 export const createNewList = (uid: string, listName: string) => async (dispatch: any) => {
 	const data: ListObj = {
@@ -71,13 +74,23 @@ export const createNewList = (uid: string, listName: string) => async (dispatch:
 	const retData = await createNewListForUser(data);
 	console.log(retData);
 
-	dispatch(setUserLists(uid));
+	dispatch(setUserLists(uid, false));
+
+	if (retData.listId) dispatch(setActiveList(retData.listId));
 };
 
 export const setActiveList = (listId: string) => async (dispatch: any) => {
 	dispatch({ type: 'SET_ACTIVE_LIST', payload: listId });
 	dispatch(setActiveListTodos());
 };
+
+export const deleteList =
+	(listId: string | undefined) => async (dispatch: any, getState: () => State) => {
+		if (!listId) return;
+
+		await deleteListDb(listId);
+		dispatch(setUserLists(getState().user.uid));
+	};
 
 //-------------------------------------------------------------------------------------------------------
 // Todos
@@ -92,7 +105,7 @@ export const createNewTodo =
 			title: todoName,
 		};
 
-		const retData = await createNewTodoDB(data);
+		const retData = await createNewTodoDb(data);
 		console.log(retData);
 
 		dispatch(setActiveListTodos());
@@ -118,3 +131,10 @@ export const updateTodo =
 
 		dispatch({ type: 'SET_ACTIVE_LIST_TODOS', payload: todos });
 	};
+
+export const deleteTodo = (todoId: string | undefined) => async (dispatch: any) => {
+	if (!todoId) return;
+
+	await deleteTodoDb(todoId);
+	dispatch(setActiveListTodos());
+};

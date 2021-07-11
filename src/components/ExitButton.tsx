@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const ExitButtonDiv = styled.div`
 	color: var(--secondary-text-color);
@@ -16,7 +17,11 @@ interface Props {
 }
 
 const ExitButton = (props: Props) => {
-	return <ExitButtonDiv onClick={props.onClose}>X</ExitButtonDiv>;
+	return (
+		<ExitButtonDiv onClick={props.onClose}>
+			<FontAwesomeIcon icon="times" />
+		</ExitButtonDiv>
+	);
 };
 
 export default ExitButton;

@@ -83,6 +83,7 @@ const AddListBox = (props: Props) => {
 					onChange={(e) => handleChange(e.target.value)}
 					value={listName}
 					margin="0 10px 0 0"
+					borderMargin="-1px 9px -1px -1px"
 				/>
 				<Button onClick={handleSubmit} width="100%">
 					ADD

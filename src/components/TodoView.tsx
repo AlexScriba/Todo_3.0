@@ -3,12 +3,14 @@ import styled from 'styled-components';
 import { useState } from 'react';
 
 import { ListObj, State, TodoObj, TodoObjUpdate } from '../types';
-import { updateTodo } from '../actions';
+import { updateTodo, deleteTodo } from '../actions';
 
 import Checkbox from './Checkbox';
 import AddTodoBox from './AddTodoBox';
 import { useEffect } from 'react';
 import PlusButton from './PlusButton';
+import DeleteButton from './DeleteButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Container = styled.div`
 	margin: 0;
@@ -62,6 +64,26 @@ const TodoText = styled.div<TodoTextProps>`
 	text-decoration: ${(props) => (props.complete ? 'line-through' : 'none')};
 `;
 
+const ShowOnHover = styled.div`
+	padding: 0;
+	margin: 0 10px 0 10px;
+
+	visibility: hidden;
+	transition: 50ms;
+
+	color: var(--secondary-text-color);
+
+	display: flex;
+
+	${TodoItem}:hover & {
+		visibility: visible;
+	}
+`;
+
+const ActionButtons = styled.div`
+	display: flex;
+`;
+
 const HeaderArea = styled.div`
 	margin-bottom: 20px;
 	display: flex;
@@ -78,6 +100,7 @@ interface Props {
 	todos: TodoObj[];
 	updateTodo: any;
 	activeList: ListObj;
+	deleteTodo: (todoId: string | undefined) => void;
 }
 
 const TodoView = (props: Props) => {
@@ -103,11 +126,22 @@ const TodoView = (props: Props) => {
 		return (
 			<TodoItem key={item.todoId}>
 				<TodoText complete={item.complete}>{item.title}</TodoText>
-				<Checkbox
-					checked={item.complete}
-					onChange={handleCheckboxChanged}
-					todoId={item.todoId as string}
-				/>
+				<ActionButtons>
+					<ShowOnHover>
+						{item.description ? (
+							<FontAwesomeIcon
+								icon="chevron-down"
+								style={{ paddingTop: '5px', marginRight: '10px' }}
+							/>
+						) : null}
+						<DeleteButton onClick={() => props.deleteTodo(item.todoId)} />
+					</ShowOnHover>
+					<Checkbox
+						checked={item.complete}
+						onChange={handleCheckboxChanged}
+						todoId={item.todoId as string}
+					/>
+				</ActionButtons>
 			</TodoItem>
 		);
 	});
@@ -135,4 +169,4 @@ const mapStateToProps = (state: State) => {
 	return { todos: state.todos, activeList: state.lists[activeListIndex] };
 };
 
-export default connect(mapStateToProps, { updateTodo })(TodoView);
+export default connect(mapStateToProps, { updateTodo, deleteTodo })(TodoView);
