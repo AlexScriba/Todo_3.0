@@ -8,6 +8,7 @@ import { updateTodo } from '../actions';
 import Checkbox from './Checkbox';
 import AddTodoBox from './AddTodoBox';
 import { useEffect } from 'react';
+import PlusButton from './PlusButton';
 
 const Container = styled.div`
 	margin: 0;
@@ -62,31 +63,13 @@ const TodoText = styled.div<TodoTextProps>`
 `;
 
 const HeaderArea = styled.div`
-	padding-bottom: 20px;
+	margin-bottom: 20px;
 	display: flex;
 	justify-content: space-between;
 `;
 
 const ListNameText = styled.span`
-	margin-top: 10px;
 	font-size: 1.1rem;
-`;
-
-const AddButton = styled.div`
-	font-size: 1.2rem;
-	margin: 0;
-	margin-right: 10px;
-
-	padding: 5px 10px 5px 10px;
-	border-radius: 5px;
-
-	cursor: pointer;
-
-	color: var(--secondary-text-color);
-
-	:hover {
-		background-color: var(--hover-color);
-	}
 `;
 
 const TodoArea = styled.div``;
@@ -135,7 +118,7 @@ const TodoView = (props: Props) => {
 			<Card>
 				<HeaderArea>
 					<ListNameText>{props.activeList?.listName}:</ListNameText>
-					<AddButton onClick={() => setAddingTodo(true)}>+</AddButton>
+					<PlusButton onClick={() => setAddingTodo(true)} />
 				</HeaderArea>
 				<TodoArea>
 					{addingTodo ? <AddTodoBox onClosePressed={() => setAddingTodo(false)} /> : null}

@@ -6,6 +6,9 @@ import { createNewTodo } from '../actions';
 import { State } from '../types';
 
 import Button from './Button';
+import ExitButton from './ExitButton';
+import InputField from './InputField';
+import InputTextArea from './InputTextArea';
 
 const Container = styled.div`
 	padding: 10px;
@@ -13,7 +16,7 @@ const Container = styled.div`
 	border-radius: 5px;
 	background-color: var(--hover-color);
 
-	margin-bottom: 15px;
+	margin: 15px 0 15px 0;
 `;
 
 const HeadingArea = styled.div`
@@ -26,70 +29,9 @@ const Heading = styled.div`
 	color: var(--secondary-text-color);
 `;
 
-const ExitButton = styled.div`
-	font-size: 0.8rem;
-	color: var(--secondary-text-color);
-
-	margin-right: 5px;
-
-	cursor: pointer;
-
-	:hover {
-		color: var(--primary-text-color);
-	}
-`;
-
 const BodyArea = styled.div`
 	display: flex;
 	flex-direction: column;
-`;
-
-interface InputProps {
-	error?: boolean;
-}
-
-const TodoNameInput = styled.input<InputProps>`
-	margin: 10px 0 10px 0;
-	padding: 5px;
-
-	background-color: var(--menu-color);
-
-	border: ${(props) => (props.error ? '1px solid red' : 'none')};
-	border-radius: 5px;
-
-	outline: none;
-
-	color: var(--primary-text-color);
-	font-size: 0.8rem;
-	font-family: inherit;
-
-	:focus {
-		margin: 9px -1px 9px -1px;
-		border: 1px solid var(--accent-color);
-	}
-`;
-
-const TodoDescriptionInput = styled.textarea<InputProps>`
-	margin: 0;
-	margin-bottom: 10px;
-	padding: 5px;
-	resize: none;
-
-	background-color: var(--menu-color);
-
-	border: ${(props) => (props.error ? '1px solid red' : 'none')};
-	border-radius: 5px;
-
-	outline: none;
-
-	color: var(--secondary-text-color);
-	font-size: 0.8rem;
-	font-family: inherit;
-
-	:focus {
-		margin: -1px -1px 9px -1px;
-		border: 1px solid var(--accent-color);
-	}
 `;
 
 const ButtonContainer = styled.div`
@@ -139,16 +81,16 @@ const AddTodoBox = (props: Props) => {
 		<Container>
 			<HeadingArea>
 				<Heading>Add new Item:</Heading>
-				<ExitButton onClick={props.onClosePressed}>X</ExitButton>
+				<ExitButton onClose={props.onClosePressed} />
 			</HeadingArea>
 			<BodyArea>
-				<TodoNameInput
+				<InputField
 					placeholder="Item Name"
 					value={todoName}
 					onChange={(e) => handleValidation(setTodoName, setNameError, e.target.value)}
 					error={nameError}
 				/>
-				<TodoDescriptionInput
+				<InputTextArea
 					placeholder="Description"
 					value={todoDescription}
 					onChange={(e) => setTodoDescription(e.target.value)}

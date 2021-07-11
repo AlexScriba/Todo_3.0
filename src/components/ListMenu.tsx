@@ -6,6 +6,7 @@ import { ListObj, State } from '../types';
 import { setActiveList } from '../actions';
 import AddListBox from './AddListBox';
 import { useState } from 'react';
+import PlusButton from './PlusButton';
 
 const List = styled.div`
 	height: 100%;
@@ -15,6 +16,7 @@ const List = styled.div`
 const HeaderArea = styled.div`
 	display: flex;
 	justify-content: space-between;
+	margin: 5px;
 `;
 
 const HeaderText = styled.div`
@@ -22,20 +24,6 @@ const HeaderText = styled.div`
 	color: var(--secondary-text-color);
 
 	padding-top: 0px;
-`;
-
-const AddButton = styled.div`
-	font-size: 1.1rem;
-	color: var(--secondary-text-color);
-
-	border-radius: 5px;
-	cursor: pointer;
-
-	padding: 0 5px 5px 5px;
-
-	:hover {
-		background-color: var(--hover-color);
-	}
 `;
 
 const ListArea = styled.div`
@@ -88,7 +76,7 @@ const ListMenu = (props: Props) => {
 		<List>
 			<HeaderArea>
 				<HeaderText>Available Lists:</HeaderText>
-				<AddButton onClick={() => setAddListActive(true)}>+</AddButton>
+				<PlusButton onClick={() => setAddListActive(true)} />
 			</HeaderArea>
 			{addListActive ? <AddListBox onClose={() => setAddListActive(false)} /> : null}
 			<ListArea>{renderedList}</ListArea>

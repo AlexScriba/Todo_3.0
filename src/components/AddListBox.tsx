@@ -6,6 +6,9 @@ import { connect } from 'react-redux';
 import { useState } from 'react';
 import { State, UserObj } from '../types';
 
+import ExitButton from './ExitButton';
+import InputField from './InputField';
+
 const Container = styled.div`
 	border-radius: 5px;
 	background-color: var(--hover-color);
@@ -14,6 +17,7 @@ const Container = styled.div`
 	flex-direction: column;
 
 	padding: 10px;
+	margin: 15px 0 15px 0;
 `;
 
 const HeaderArea = styled.div`
@@ -27,45 +31,9 @@ const HeaderText = styled.div`
 	color: var(--secondary-text-color);
 `;
 
-const ExitButton = styled.div`
-	color: var(--secondary-text-color);
-	font-size: 0.8rem;
-
-	cursor: pointer;
-
-	:hover {
-		color: var(--primary-text-color);
-	}
-`;
-
 const BodyArea = styled.div`
 	display: grid;
 	grid-template-columns: 8fr 2fr;
-`;
-
-interface NameInputProps {
-	error?: boolean;
-}
-
-const NameInput = styled.input<NameInputProps>`
-	background-color: var(--menu-color);
-
-	border: ${(props) => (props.error ? '1px solid red' : 'none')};
-	border-radius: 5px;
-
-	outline: none;
-
-	color: var(--primary-text-color);
-	font-size: 0.8rem;
-	font-family: inherit;
-
-	padding: 5px;
-	margin-right: 10px;
-
-	:focus {
-		margin: -1px -1px -1px -1px;
-		border: 1px solid var(--accent-color);
-	}
 `;
 
 interface Props {
@@ -76,25 +44,45 @@ interface Props {
 
 const AddListBox = (props: Props) => {
 	const [listName, setListName] = useState('');
+	const [inputError, setInputError] = useState(false);
+
+	//function to handle validation of list name input
+	const isValid = (name: string) => {
+		if (!name) return false;
+
+		return true;
+	};
 
 	//function to handle the submit of the name
 	const handleSubmit = () => {
+		if (!isValid(listName)) {
+			setInputError(true);
+			return;
+		}
+
 		props.createNewList(props.user.uid, listName);
 		props.onClose();
+	};
+
+	//function to handle the change of listName
+	const handleChange = (name: string) => {
+		setInputError(isValid(name));
+		setListName(name);
 	};
 
 	return (
 		<Container>
 			<HeaderArea>
 				<HeaderText>Add new List:</HeaderText>
-				<ExitButton onClick={props.onClose}>X</ExitButton>
+				<ExitButton onClose={props.onClose} />
 			</HeaderArea>
 			<BodyArea>
-				<NameInput
+				<InputField
 					placeholder="List Name"
-					error={false}
-					onChange={(e) => setListName(e.target.value)}
+					error={inputError}
+					onChange={(e) => handleChange(e.target.value)}
 					value={listName}
+					margin="0 10px 0 0"
 				/>
 				<Button onClick={handleSubmit} width="100%">
 					ADD
