@@ -5,6 +5,7 @@ import { ListObj, State } from '../types';
 
 import { setActiveList } from '../actions';
 import AddListBox from './AddListBox';
+import { useState } from 'react';
 
 const List = styled.div`
 	height: 100%;
@@ -70,6 +71,8 @@ interface Props {
 }
 
 const ListMenu = (props: Props) => {
+	const [addListActive, setAddListActive] = useState(false);
+
 	//Rendering list items
 	const renderedList = props.lists.map((item) => (
 		<ListItem
@@ -85,9 +88,9 @@ const ListMenu = (props: Props) => {
 		<List>
 			<HeaderArea>
 				<HeaderText>Available Lists:</HeaderText>
-				<AddButton>+</AddButton>
+				<AddButton onClick={() => setAddListActive(true)}>+</AddButton>
 			</HeaderArea>
-			<AddListBox />
+			{addListActive ? <AddListBox onClose={() => setAddListActive(false)} /> : null}
 			<ListArea>{renderedList}</ListArea>
 		</List>
 	);
